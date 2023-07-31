@@ -16,21 +16,19 @@ function loadSavedItems() {
   }
 }
 
-// Save to-do list items and their status in the cookie
 function saveItemsToCookie() {
   var items = [];
   var listItems = document.querySelectorAll('ul li');
   listItems.forEach(function (li) {
     var item = {
-      text: li.textContent,
+      text: li.textContent.replace('×', '').trim(), // Remove the close button symbol before saving
       checked: li.classList.contains('checked')
     };
     items.push(item);
   });
-  setCookie('todoItems', JSON.stringify(items));
+  setCookie('todoItems', JSON.stringify(items), 30); // Set cookie to expire in 30 days
 }
 
-// Function to set a cookie
 function setCookie(name, value, days) {
   var expires = '';
   if (days) {
@@ -38,30 +36,17 @@ function setCookie(name, value, days) {
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
     expires = '; expires=' + date.toUTCString();
   }
-  document.cookie = name + '=' + value + expires + '; path=/';
-}
-
-
-// Click on a close button to hide the current list item
-function setupOnClose() {
-  var close = document.getElementsByClassName('close');
-  for (var i = 0; i < close.length; i++) {
-    close[i].onclick = function () {
-      var div = this.parentElement;
-      div.style.display = 'none';
-      saveItemsToCookie(); // Save the updated list to the cookie
-    };
-  }
+  document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
 }
 
 function newElement() {
   var li = document.createElement('li');
   var inputValue = document.getElementById('myInput').value.trim();
-
+  
   // Sanitize the input value
   var textNode = document.createTextNode(inputValue);
   li.appendChild(textNode);
-
+  
   if (inputValue === '') {
     Swal.fire({
       icon: 'error',
@@ -78,25 +63,26 @@ function newElement() {
   }
 }
 
-// Add a "checked" symbol when clicking on a list item
+// Add a "checked" class when clicking on a list item
 var list = document.querySelector('ul');
-list.addEventListener('click', function (ev) {
+list.addEventListener('click', function(ev) {
   if (ev.target.tagName === 'LI') {
     ev.target.classList.toggle('checked');
     saveItemsToCookie(); // Save the updated status to the cookie
   }
 }, false);
 
-// Function to set a cookie
-function setCookie(name, value, days) {
-  var expires = '';
-  if (days) {
-    var date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    expires = '; expires=' + date.toUTCString();
+function setupOnClose() {
+  var close = document.getElementsByClassName('close');
+  for (var i = 0; i < close.length; i++) {
+    close[i].onclick = function() {
+      var div = this.parentElement;
+      div.style.display = 'none';
+      saveItemsToCookie(); // Save the updated list to the cookie
+    };
   }
-  document.cookie = name + '=' + value + expires + '; path=/';
 }
+
 
 // Function to get a cookie value by name
 function getCookie(name) {
