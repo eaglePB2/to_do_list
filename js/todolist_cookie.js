@@ -38,10 +38,6 @@ function setupOnClose() {
       var div = ev.target.parentElement;
       div.style.display = 'none';
       saveItemsToCookie(); // Save the updated list to the cookie
-    } else if (ev.target.tagName === 'LI') {
-      // Toggle the "checked" class when clicking on the list item
-      ev.target.classList.toggle('checked');
-      saveItemsToCookie(); // Save the updated status to the cookie
     }
   });
 
@@ -55,7 +51,6 @@ function setupOnClose() {
     }
   });
 }
-
 
 
 function newElement() {
