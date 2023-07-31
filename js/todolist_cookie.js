@@ -60,7 +60,7 @@ function newElement() {
   } else {
     document.getElementById('myUL').appendChild(li);
     document.getElementById('myInput').value = '';
-    li.innerHTML += '<span class="close">\u00D7</span>';
+    li.innerHTML += '<i class="fas fa-times close"></i>';
     setupOnClose();
     saveItemsToCookie(); // Save the updated list to the cookie
   }
